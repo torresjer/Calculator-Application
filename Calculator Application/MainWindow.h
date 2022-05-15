@@ -21,7 +21,11 @@ public:
 	
 	std::string operationLabels[20] = { "1","2","3","+","4","5","6","-","7","8","9","/","0","=","C","*","%","Bin","Hex","Dec"};
 	wxTextCtrl* outputWindow = nullptr;
-	wxButton* button = nullptr;
+	wxButton** button = nullptr;
+
+	void ButtonSelected(wxCommandEvent &event);
+
+	wxDECLARE_EVENT_TABLE();
 
 
 };
