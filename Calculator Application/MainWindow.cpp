@@ -6,15 +6,15 @@ wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(30, 30), wxSize(600, 850))
 {
-	long style = wxTE_RIGHT | wxTE_READONLY;
-	int buttonLable = 0;
-	wxFont font(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
-	
-
-	wxBoxSizer* mainWindowSizer = new wxBoxSizer(wxVERTICAL);
+	int buttonLable = 0;//Integrator for lables added to buttons
+	ButtonFactory buttonMaker;//Button Factory to make new buttons
 
 	//textbox used as the output display
+	long style = wxTE_RIGHT | wxTE_READONLY;
 	outputWindow = new wxTextCtrl(this, wxID_ANY, "", wxPoint(20, 20), wxSize(540, 270), style);
+
+	//Main Sizer to put gridSizer into
+	wxBoxSizer* mainWindowSizer = new wxBoxSizer(wxVERTICAL);
 	mainWindowSizer->Add(outputWindow, 0, wxEXPAND | wxTOP | wxBOTTOM);
 	
 	//Created a grid for the calc UI
@@ -23,12 +23,10 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(30, 
 
 	for(int x = 0; x < fieldLength * fieldWidth; x++)
 	{
-			button[x] = new wxButton(this, 10000 + x , operationLabels[buttonLable], wxPoint(buttonStartingPosX, buttonStartingPosY));
-			button[x]->SetFont(font);
-			buttonSelection->Add(button[x], 1, wxEXPAND | wxALL);
-
-			button[x]->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainWindow::ButtonSelected, this);
-			buttonLable++;
+		button[x] = buttonMaker.CreateButton(this, x, operationLabels[x]);
+		buttonSelection->Add(button[x], 1, wxEXPAND | wxALL);
+		button[x]->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainWindow::ButtonSelected, this);
+		buttonLable++;
 	}
 	
 	
