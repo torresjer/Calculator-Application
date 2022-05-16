@@ -17,21 +17,26 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(30, 
 	wxBoxSizer* mainWindowSizer = new wxBoxSizer(wxVERTICAL);
 	mainWindowSizer->Add(outputWindow, 0, wxEXPAND | wxTOP | wxBOTTOM);
 	
-	//Created a grid for the calc UI
-	wxGridSizer* buttonSelection = new wxGridSizer(fieldWidth, fieldLength, 3, 3);
+	//Created a gridSizer for the calc UI
+    buttonSelection = new wxGridSizer(fieldWidth, fieldLength, 3, 3);
 	button = new wxButton * [fieldWidth * fieldLength];
 
+	//Adding button array to the gridsizer
 	for(int x = 0; x < fieldLength * fieldWidth; x++)
 	{
+		//Uses ButtonFactory to generate buttons
 		button[x] = buttonMaker.CreateButton(this, x, operationLabels[x]);
 		buttonSelection->Add(button[x], 1, wxEXPAND | wxALL);
+
+		//Binds button event to the ButtonSelected function
 		button[x]->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainWindow::ButtonSelected, this);
 		buttonLable++;
 	}
 	
-	
+	//Adds the gridsizer(buttonSelection) to the boxsizer(mainWindowSizer)
 	mainWindowSizer->Add(buttonSelection, 1, wxEXPAND);
 
+	//Sets boxsizer as the sizer for the mainWindow
 	this->SetSizer(mainWindowSizer);
 	
 	
@@ -40,11 +45,13 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(30, 
 void MainWindow::ButtonSelected(wxCommandEvent &event){
 	
 	//Cordinates of button selection.
-	wxFont textBoxFont(32, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
-
 	int selectedButtonID = event.GetId() - 10000;
+
+	//Sets font for outputWindow
+	wxFont textBoxFont(32, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 	outputWindow->SetFont(textBoxFont);
 
+	//Handels event cases.
 	switch (selectedButtonID)
 	{
 	case 0:
@@ -110,11 +117,9 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 	default:
 		break;
 	}
-
-	
-
-
 }
+
+//Writes text to output windown depending on selected button.
 void MainWindow::writeTextForButtonSelected(int buttonID) {
 
 	outputWindow->AppendText(operationLabels[buttonID]);
