@@ -7,7 +7,7 @@ wxEND_EVENT_TABLE()
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(30, 30), wxSize(600, 850))
 {
 	int buttonLable = 0;//Integrator for lables added to buttons
-	ButtonFactory buttonMaker;//Button Factory to make new buttons
+	ButtonFactory buttonMaker(this);//Button Factory to make new buttons
 
 	//textbox used as the output display
 	long style = wxTE_RIGHT | wxTE_READONLY;

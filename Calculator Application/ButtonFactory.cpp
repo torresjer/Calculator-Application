@@ -1,7 +1,7 @@
 
 #include "ButtonFactory.h"
 
-ButtonFactory::ButtonFactory() {};
+ButtonFactory::ButtonFactory(wxFrame* mainWindow) { this->parent = mainWindow; };
 ButtonFactory::~ButtonFactory() {};
 
 wxButton* ButtonFactory::CreateButton(wxFrame* parent, int wxIDIntegrator, std::string lables) {
