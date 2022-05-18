@@ -21,12 +21,36 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(30, 
     buttonSelection = new wxGridSizer(fieldWidth, fieldLength, 3, 3);
 	button = new wxButton * [fieldWidth * fieldLength];
 
+	button[0] = buttonMaker.CreateButton1();
+	button[1] = buttonMaker.CreateButton2();
+	button[2] = buttonMaker.CreateButton3();
+	button[3] = buttonMaker.CreateButton4();
+	button[4] = buttonMaker.CreateButtonPlus();
+	button[5] = buttonMaker.CreateButton5();
+	button[6] = buttonMaker.CreateButton6();
+	button[7] = buttonMaker.CreateButton7();
+	button[8] = buttonMaker.CreateButton8();
+	button[9] = buttonMaker.CreateButtonMinus();
+	button[10] = buttonMaker.CreateButton9();
+	button[11] = buttonMaker.CreateButton0();
+	button[12] = buttonMaker.CreateButtonEquals();
+	button[13] = buttonMaker.CreateButtonClear();
+	button[14] = buttonMaker.CreateButtonDivide();
+	button[15] = buttonMaker.CreateButtonBinary();
+	button[16] = buttonMaker.CreateButtonHex();
+	button[17] = buttonMaker.CreateButtonDecimal();
+	button[18] = buttonMaker.CreateButtonModular();
+	button[19] = buttonMaker.CreateButtonMultiply();
+	
+	//Button Font
+	wxFont font(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+	
 	//Adding button array to the gridsizer
 	for(int x = 0; x < fieldLength * fieldWidth; x++)
 	{
-		//Uses ButtonFactory to generate buttons
-		button[x] = buttonMaker.CreateButton(this, x, operationLabels[x]);
+		button[x]->SetFont(font);
 		buttonSelection->Add(button[x], 1, wxEXPAND | wxALL);
+
 
 		//Binds button event to the ButtonSelected function
 		button[x]->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainWindow::ButtonSelected, this);
