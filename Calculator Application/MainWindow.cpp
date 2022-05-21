@@ -46,6 +46,7 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 	
 	//Cordinates of button selection.
 	int selectedButtonID = event.GetId() - 10000;
+	float currentValue = 0.0f;
 
 	//Sets font for outputWindow
 	wxFont textBoxFont(32, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
@@ -55,64 +56,66 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 	switch (selectedButtonID)
 	{
 	case 0:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Number 1 button
 		break;
 	case 1:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Number 2 button
 		break;
 	case 2:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Number 3 button
 		break;
 	case 3:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Number 4 button
 		break;
 	case 4:
-		writeTextForButtonSelected(selectedButtonID);
+		button[selectedButtonID]->Disable();		  //Operation + button
+		
+
 		break;
 	case 5:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Number 5 button
 		break;
 	case 6:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Number 6 button
 		break;
 	case 7:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Number 7 button
 		break;
 	case 8:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Number 8 button
 		break;
 	case 9:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Operation - button
 		break;
 	case 10:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Number 9 button
 		break;
 	case 11:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Number 0 button
 		break;
 	case 12:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Operation = button
 		break;
 	case 13:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Operation Clear button
 		break;
 	case 14:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Operation / button
 		break;
 	case 15:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Convert to Dec button
 		break;
 	case 16:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Convert to Bin button
 		break;
 	case 17:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Conver to Hex button
 		break;
 	case 18:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Operation % button
 		break;
 	case 19:
-		writeTextForButtonSelected(selectedButtonID);
+		writeTextForButtonSelected(selectedButtonID); //Operation * button
 		break;
 	default:
 		break;
