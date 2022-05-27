@@ -52,4 +52,53 @@ bool Calculator_Processor::EqualsOperator(wxTextCtrl* outputWindow, vector<float
 	outputWindow->Clear();
 	return true;
 }
-void Calculator_Processor::HexConverstion(wxTextCtrl* outputWindow)
+bool Calculator_Processor::HexConverstion(wxTextCtrl* outputWindow) {
+	vector<int> hexValues;
+	string input = outputWindow->GetValue().ToStdString();
+	int value = stoi(input);
+	while (value != 0) {
+		hexValues.push_back(value % 16);
+		value = value / 16;
+	}
+
+	outputWindow->Clear();
+	outputWindow->AppendText("0x");
+		for (size_t i = 0; i < hexValues.size(); i++)
+		{
+			switch (hexValues[i]) {
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+				outputWindow->AppendText(to_string(hexValues[i]));
+				break;
+			case 10:
+				outputWindow->AppendText("A");
+				break;
+			case 11:
+				outputWindow->AppendText("B");
+				break;
+			case 12:
+				outputWindow->AppendText("C");
+				break;
+			case 13:
+				outputWindow->AppendText("D");
+				break;
+			case 14:
+				outputWindow->AppendText("E");
+				break;
+			case 15:
+				outputWindow->AppendText("F");
+				break;
+			}
+
+		}
+
+		return true;
+}

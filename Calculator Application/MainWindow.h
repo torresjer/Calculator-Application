@@ -28,6 +28,7 @@ public:
 	float currentValue = 0.0F;
 	bool syntaxErrorOccurred = false;
 	bool operationAnswered = false;
+	bool conversionTookPlace = false;
 	
 	CalculatorOperations currentOperator = Null;
 	CalculatorOperations previousOperator = Null;

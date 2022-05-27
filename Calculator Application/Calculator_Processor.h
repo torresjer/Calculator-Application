@@ -26,6 +26,6 @@ public:
 	float ModulusOperator(int inputOne, int inputTwo);
 	void ClearOperator(wxTextCtrl* outputWindow, vector<float>* numaricInputs);
 	bool EqualsOperator(wxTextCtrl* outputWindow, vector<float>* numaricInputs, Calculator_Processor& processor);
-	
+	bool HexConverstion(wxTextCtrl* outputWindow);
 };
 

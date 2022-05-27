@@ -62,7 +62,7 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 	//Sets font for outputWindow
 	outputWindow->SetFont(textBoxFont);
 	//checks if operation has been answered
-	if (operationAnswered) {
+	if (operationAnswered || syntaxErrorOccurred || conversionTookPlace) {
 		processor.ClearOperator(outputWindow, numaricInputs);
 		operationAnswered = false;
 		return;
@@ -74,11 +74,7 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 	}
 	
 	//checks if sytax errors have occured and resets for input
-	if (syntaxErrorOccurred) {
-		processor.ClearOperator(outputWindow, numaricInputs);
-		syntaxErrorOccurred = false;
-		return;
-	}
+	
 		
 	
 
@@ -183,7 +179,7 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 		break;
 	//Convert to Hex button
 	case 17:
-		writeTextForButtonSelected(selectedButtonID); 
+		conversionTookPlace = processor.HexConverstion(outputWindow);
 		break;
 	//Operation % button
 	case 18:
