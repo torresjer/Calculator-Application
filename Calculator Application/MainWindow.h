@@ -27,6 +27,7 @@ public:
 	int fieldLength = 5;
 	float currentValue = 0.0F;
 	bool syntaxErrorOccurred = false;
+	bool operationAnswered = false;
 	
 	CalculatorOperations currentOperator = Null;
 	CalculatorOperations previousOperator = Null;

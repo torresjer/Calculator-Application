@@ -47,7 +47,6 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(30, 
 	//Sets boxsizer as the sizer for the mainWindow
 	this->SetSizer(mainWindowSizer);
 	
-	
 }
 
 void MainWindow::ButtonSelected(wxCommandEvent &event){
@@ -60,18 +59,24 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 	bool numericInputRange = ((selectedButtonID >= 0 && selectedButtonID <= 3) &&
 								(selectedButtonID >= 5 && selectedButtonID <= 8) &&
 									(selectedButtonID >= 10 && selectedButtonID <= 11));
+	//Sets font for outputWindow
+	outputWindow->SetFont(textBoxFont);
+	//checks if operation has been answered
+	if (operationAnswered) {
+		processor.ClearOperator(outputWindow, numaricInputs);
+		operationAnswered = false;
+		return;
+	}
 	
 	//enables all operations that have been disabled from using them.
 	for (int i = 0; i < fieldWidth * fieldLength; i++) {
 		button[i]->Enable();
 	}
-	//Sets font for outputWindow
-	outputWindow->SetFont(textBoxFont);
+	
 	//checks if sytax errors have occured and resets for input
 	if (syntaxErrorOccurred) {
-		outputWindow->Clear();
+		processor.ClearOperator(outputWindow, numaricInputs);
 		syntaxErrorOccurred = false;
-		outputWindow->AppendText(to_string(currentValue));
 		return;
 	}
 		
@@ -145,11 +150,11 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 		break;
 	//Operation = button
 	case 12:
-		writeTextForButtonSelected(selectedButtonID); 
+		operationAnswered = processor.EqualsOperator(outputWindow, numaricInputs, processor);
 		break;
-		//Operation Clear button
+	//Operation Clear button
 	case 13:
-		writeTextForButtonSelected(selectedButtonID); 
+		processor.ClearOperator(outputWindow, numaricInputs);
 		break;
 	//Operation / button
 	case 14:
@@ -273,5 +278,5 @@ void MainWindow::SetOutputWindowToZero(wxTextCtrl* outputWindow) {
 
 
 
-MainWindow::~MainWindow() { delete numaricInputs; }
+MainWindow::~MainWindow() {delete numaricInputs; }
 

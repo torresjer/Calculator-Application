@@ -39,3 +39,17 @@ float Calculator_Processor::ModulusOperator(int inputOne, int inputTwo) {
 	return inputOne % inputTwo;
 
 }
+void Calculator_Processor::ClearOperator(wxTextCtrl* outputWindow, vector<float>* numaricInputs) {
+	outputWindow->Clear();
+	while (numaricInputs->size() != 0)
+	{
+		numaricInputs->pop_back();
+	}
+
+}
+bool Calculator_Processor::EqualsOperator(wxTextCtrl* outputWindow, vector<float>* numaricInputs, Calculator_Processor& processor) {
+	numaricInputs->push_back(processor.ConverStringToFloat(outputWindow));
+	outputWindow->Clear();
+	return true;
+}
+void Calculator_Processor::HexConverstion(wxTextCtrl* outputWindow)
