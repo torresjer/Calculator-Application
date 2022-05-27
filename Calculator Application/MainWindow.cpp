@@ -1,14 +1,20 @@
 #include "MainWindow.h"
 
+
+
+
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 EVT_BUTTON(10001, ButtonSelected)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(30, 30), wxSize(600, 850))
 {
+
+	
+
 	int buttonLable = 0;//Integrator for lables added to buttons
 	ButtonFactory buttonMaker;//Button Factory to make new buttons
-
+	
 	//textbox used as the output display
 	long style = wxTE_RIGHT | wxTE_READONLY;
 	outputWindow = new wxTextCtrl(this, wxID_ANY, "", wxPoint(20, 20), wxSize(540, 270), style);
@@ -20,6 +26,8 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(30, 
 	//Created a gridSizer for the calc UI
     buttonSelection = new wxGridSizer(fieldWidth, fieldLength, 3, 3);
 	button = new wxButton * [fieldWidth * fieldLength];
+
+	
 
 	//Adding button array to the gridsizer
 	for(int x = 0; x < fieldLength * fieldWidth; x++)
@@ -43,83 +51,211 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Calculator", wxPoint(30, 
 }
 
 void MainWindow::ButtonSelected(wxCommandEvent &event){
+	//Local Variables for ButtonSelected
 	
-	//Cordinates of button selection.
-	int selectedButtonID = event.GetId() - 10000;
-	float currentValue = 0.0f;
-
-	//Sets font for outputWindow
+	int selectedButtonID = event.GetId() - 10000;//Cordinates of button selection.
 	wxFont textBoxFont(32, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+	Calculator_Processor& processor = Calculator_Processor::GetInstance(); //Calculator_Processor Instance for this App
+	vector<float>* numaricInputs = GetNumaricInputVector();
+	bool numericInputRange = ((selectedButtonID >= 0 && selectedButtonID <= 3) &&
+								(selectedButtonID >= 5 && selectedButtonID <= 8) &&
+									(selectedButtonID >= 10 && selectedButtonID <= 11));
+	
+	//enables all operations that have been disabled from using them.
+	for (int i = 0; i < fieldWidth * fieldLength; i++) {
+		button[i]->Enable();
+	}
+	//Sets font for outputWindow
 	outputWindow->SetFont(textBoxFont);
+	//checks if sytax errors have occured and resets for input
+	if (syntaxErrorOccurred) {
+		outputWindow->Clear();
+		syntaxErrorOccurred = false;
+		outputWindow->AppendText(to_string(currentValue));
+		return;
+	}
+		
+	
 
-	//Handels event cases.
+	if (!outputWindow->IsEmpty() && currentOperator != Null) {
+		
+			previousOperator = currentOperator;
+			currentOperator = Null;
+			outputWindow->Clear();
+		
+	}
+	
 	switch (selectedButtonID)
 	{
+		//Writing to outputwindow button 1-4.
 	case 0:
-		writeTextForButtonSelected(selectedButtonID); //Number 1 button
-		break;
 	case 1:
-		writeTextForButtonSelected(selectedButtonID); //Number 2 button
-		break;
 	case 2:
-		writeTextForButtonSelected(selectedButtonID); //Number 3 button
-		break;
 	case 3:
-		writeTextForButtonSelected(selectedButtonID); //Number 4 button
-		break;
-	case 4:
-		button[selectedButtonID]->Disable();		  //Operation + button
-		
-
-		break;
+		//Writing to outputwindow button 5-8.
 	case 5:
-		writeTextForButtonSelected(selectedButtonID); //Number 5 button
-		break;
 	case 6:
-		writeTextForButtonSelected(selectedButtonID); //Number 6 button
-		break;
 	case 7:
-		writeTextForButtonSelected(selectedButtonID); //Number 7 button
-		break;
 	case 8:
+	case 10:
+	case 11:
+		//Writing to outputwindow button 9, 0.
 		writeTextForButtonSelected(selectedButtonID); //Number 8 button
 		break;
+		}
+	
+	
+	//Handels Operation event cases.
+	switch (selectedButtonID)
+	{
+	//Operation + button
+	case 4:
+		try
+		{
+			processor.ConverStringToFloat(outputWindow);
+		}
+		catch (const std::exception&)
+		{
+			outputWindow->Clear();
+			outputWindow->AppendText("SYNTAX ERROR");
+			syntaxErrorOccurred = true;
+			break;
+		}
+		numaricInputs->push_back(processor.ConverStringToFloat(outputWindow));  
+		button[selectedButtonID]->Disable();
+		currentOperator = Addition;
+
+		break;
+	//Operation - button
 	case 9:
-		writeTextForButtonSelected(selectedButtonID); //Operation - button
+		try 
+		{
+			processor.ConverStringToFloat(outputWindow);
+		}
+		catch (const std::exception&)
+		{
+			outputWindow->Clear();
+			outputWindow->AppendText("SYNTAX ERROR");
+			syntaxErrorOccurred = true;
+			break;
+		}
+		numaricInputs->push_back(processor.ConverStringToFloat(outputWindow));  
+		button[selectedButtonID]->Disable();
+		currentOperator = Subtraction;
 		break;
-	case 10:
-		writeTextForButtonSelected(selectedButtonID); //Number 9 button
-		break;
-	case 11:
-		writeTextForButtonSelected(selectedButtonID); //Number 0 button
-		break;
+	//Operation = button
 	case 12:
-		writeTextForButtonSelected(selectedButtonID); //Operation = button
+		writeTextForButtonSelected(selectedButtonID); 
 		break;
+		//Operation Clear button
 	case 13:
-		writeTextForButtonSelected(selectedButtonID); //Operation Clear button
+		writeTextForButtonSelected(selectedButtonID); 
 		break;
+	//Operation / button
 	case 14:
-		writeTextForButtonSelected(selectedButtonID); //Operation / button
+		try
+		{
+			processor.ConverStringToFloat(outputWindow);
+		}
+		catch (const std::exception&)
+		{
+			outputWindow->Clear();
+			outputWindow->AppendText("SYNTAX ERROR");
+			syntaxErrorOccurred = true;
+			break;
+		}
+		numaricInputs->push_back(processor.ConverStringToFloat(outputWindow)); 
+		button[selectedButtonID]->Disable();
+		currentOperator = Division;
 		break;
+	//Convert to Dec button
 	case 15:
-		writeTextForButtonSelected(selectedButtonID); //Convert to Dec button
+		writeTextForButtonSelected(selectedButtonID); 
 		break;
+	//Convert to Bin button
 	case 16:
-		writeTextForButtonSelected(selectedButtonID); //Convert to Bin button
+		writeTextForButtonSelected(selectedButtonID); 
 		break;
+	//Convert to Hex button
 	case 17:
-		writeTextForButtonSelected(selectedButtonID); //Conver to Hex button
+		writeTextForButtonSelected(selectedButtonID); 
 		break;
+	//Operation % button
 	case 18:
-		writeTextForButtonSelected(selectedButtonID); //Operation % button
+		try
+		{
+			processor.ConverStringToFloat(outputWindow);
+		}
+		catch (const std::exception&)
+		{
+			outputWindow->Clear();
+			outputWindow->AppendText("SYNTAX ERROR");
+			syntaxErrorOccurred = true;
+			break;
+		}
+		numaricInputs->push_back(processor.ConverStringToFloat(outputWindow)); 
+		button[selectedButtonID]->Disable();
+		currentOperator = Modulus;
 		break;
+	//Operation * button
 	case 19:
-		writeTextForButtonSelected(selectedButtonID); //Operation * button
+		try
+		{
+			processor.ConverStringToFloat(outputWindow);
+		}
+		catch (const std::exception&)
+		{
+			outputWindow->Clear();
+			outputWindow->AppendText("SYNTAX ERROR");
+			syntaxErrorOccurred = true;
+			break;
+		}
+		numaricInputs->push_back(processor.ConverStringToFloat(outputWindow)); 
+		button[selectedButtonID]->Disable();
+		currentOperator = Multiplication;
 		break;
 	default:
 		break;
 	}
+
+	if (numaricInputs->size() == 2 && previousOperator != Null) {
+		
+		float input1 = numaricInputs->at(0);
+		float input2 = numaricInputs->at(1);
+
+
+		switch (previousOperator)
+		{
+		case Addition:
+			currentValue = processor.AddtionOperator(input1, input2);
+			break;
+		case Subtraction:
+			currentValue = processor.SubtractionOperator(input1, input2);
+			break;
+		case Multiplication:
+			currentValue = processor.MultiplicationOperator(input1, input2);
+			break;
+		case Division:
+			currentValue = processor.DivisionOperator(input1, input2);
+			break;
+		case Modulus:
+			currentValue = processor.ModulusOperator((int)input1, (int)input2);
+			break;
+		default:
+			break;
+		}
+		while (numaricInputs->size() != 0) {
+			numaricInputs->pop_back();
+		}
+
+		outputWindow->Clear();
+		outputWindow->AppendText(to_string(currentValue));
+		numaricInputs->push_back(currentValue);
+		previousOperator = Null;
+	}
+
+	
+	
 }
 
 //Writes text to output windown depending on selected button.
@@ -128,6 +264,14 @@ void MainWindow::writeTextForButtonSelected(int buttonID) {
 	outputWindow->AppendText(operationLabels[buttonID]);
 
 }
+void MainWindow::SetOutputWindowToZero(wxTextCtrl* outputWindow) {
 
-MainWindow::~MainWindow(){}
+	outputWindow->Clear();
+	outputWindow->AppendText("0");
+}
+
+
+
+
+MainWindow::~MainWindow() { delete numaricInputs; }
 

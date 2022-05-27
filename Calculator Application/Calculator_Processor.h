@@ -17,7 +17,7 @@ public:
 
 	static Calculator_Processor& GetInstance();
 
-	float ConverStringToFloat(const string& userInput);
+	float ConverStringToFloat(wxTextCtrl* outputWindow);
 	
 	float AddtionOperator(float inputOne, float inputTwo);
 	float SubtractionOperator(float inputOne, float inputtTwo);
