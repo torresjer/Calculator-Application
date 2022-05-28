@@ -10,7 +10,9 @@ enum CalculatorOperations
 	Subtraction,
 	Multiplication,
 	Division,
-	Modulus
+	Modulus,
+	Equals,
+	Clear
 };
 using namespace std;
 
@@ -25,6 +27,7 @@ public:
 	//This is the button field available to the user
 	int fieldWidth = 4;
 	int fieldLength = 5;
+	int converstionValue = 0;
 	float currentValue = 0.0F;
 	bool syntaxErrorOccurred = false;
 	bool operationAnswered = false;
@@ -33,14 +36,14 @@ public:
 	CalculatorOperations currentOperator = Null;
 	CalculatorOperations previousOperator = Null;
 	
-	void SetNumaricInputs(vector<float>* numaricInputs) { this->numaricInputs = numaricInputs; }; 
+	void SetNumericInputs(vector<float>* numaricInputs) { this->numericInputs = numaricInputs; }; 
 	
 
-	vector<float>* GetNumaricInputVector() { return numaricInputs; }
+	vector<float>* GetNumericInputVector() { return numericInputs; }
 
 private:
 
-	vector<float>* numaricInputs = new vector<float>;
+	vector<float>* numericInputs = new vector<float>;
 	wxGridSizer* buttonSelection = nullptr;
 	std::string operationLabels[20] = 
 		{ "1","2","3","4","+","5","6","7","8","-","9","0","=","C","/","Dec","Bin","Hex","%","*"};

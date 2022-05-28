@@ -55,16 +55,17 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 	int selectedButtonID = event.GetId() - 10000;//Cordinates of button selection.
 	wxFont textBoxFont(32, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 	Calculator_Processor& processor = Calculator_Processor::GetInstance(); //Calculator_Processor Instance for this App
-	vector<float>* numaricInputs = GetNumaricInputVector();
-	bool numericInputRange = ((selectedButtonID >= 0 && selectedButtonID <= 3) &&
-								(selectedButtonID >= 5 && selectedButtonID <= 8) &&
+	vector<float>* numericInputs = GetNumericInputVector();
+	bool numaricInputRange = ((selectedButtonID >= 0 && selectedButtonID <= 3) ||
+								(selectedButtonID >= 5 && selectedButtonID <= 8) ||
 									(selectedButtonID >= 10 && selectedButtonID <= 11));
 	//Sets font for outputWindow
 	outputWindow->SetFont(textBoxFont);
 	//checks if operation has been answered
-	if (operationAnswered || syntaxErrorOccurred || conversionTookPlace) {
-		processor.ClearOperator(outputWindow, numaricInputs);
+	if((syntaxErrorOccurred)){
+		processor.ClearOperator(outputWindow, numericInputs);
 		operationAnswered = false;
+		syntaxErrorOccurred = false;
 		return;
 	}
 	
@@ -75,17 +76,15 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 	
 	//checks if sytax errors have occured and resets for input
 	
-		
-	
+	if (!outputWindow->IsEmpty() && currentOperator != Null && numaricInputRange) {
 
-	if (!outputWindow->IsEmpty() && currentOperator != Null) {
-		
-			previousOperator = currentOperator;
-			currentOperator = Null;
-			outputWindow->Clear();
-		
+
+		previousOperator = currentOperator;
+		currentOperator = Null;
+		outputWindow->Clear();
+
 	}
-	
+		
 	switch (selectedButtonID)
 	{
 		//Writing to outputwindow button 1-4.
@@ -113,6 +112,7 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 	case 4:
 		try
 		{
+	
 			processor.ConverStringToFloat(outputWindow);
 		}
 		catch (const std::exception&)
@@ -122,10 +122,15 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 			syntaxErrorOccurred = true;
 			break;
 		}
-		numaricInputs->push_back(processor.ConverStringToFloat(outputWindow));  
-		button[selectedButtonID]->Disable();
-		currentOperator = Addition;
-
+		if (currentOperator == Equals) {
+			button[selectedButtonID]->Disable();
+			currentOperator = Addition;
+		}
+		else {
+			numericInputs->push_back(processor.ConverStringToFloat(outputWindow));
+			button[selectedButtonID]->Disable();
+			currentOperator = Addition;
+		}
 		break;
 	//Operation - button
 	case 9:
@@ -140,17 +145,31 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 			syntaxErrorOccurred = true;
 			break;
 		}
-		numaricInputs->push_back(processor.ConverStringToFloat(outputWindow));  
-		button[selectedButtonID]->Disable();
-		currentOperator = Subtraction;
+		if (currentOperator == Equals) {
+			button[selectedButtonID]->Disable();
+			currentOperator = Subtraction;
+		}
+		else {
+			numericInputs->push_back(processor.ConverStringToFloat(outputWindow));
+			button[selectedButtonID]->Disable();
+			currentOperator = Subtraction;
+		}
 		break;
 	//Operation = button
 	case 12:
-		operationAnswered = processor.EqualsOperator(outputWindow, numaricInputs, processor);
+		if (numericInputs->empty() || currentOperator == Equals) {
+			outputWindow->Clear();
+			outputWindow->AppendText("SYNTAX ERROR");
+			syntaxErrorOccurred = true;
+			return;
+		};
+		processor.EqualsOperator(outputWindow, numericInputs, processor, operationAnswered);
+		currentOperator = Equals;
 		break;
 	//Operation Clear button
 	case 13:
-		processor.ClearOperator(outputWindow, numaricInputs);
+		processor.ClearOperator(outputWindow, numericInputs);
+		currentOperator = Clear;
 		break;
 	//Operation / button
 	case 14:
@@ -165,21 +184,29 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 			syntaxErrorOccurred = true;
 			break;
 		}
-		numaricInputs->push_back(processor.ConverStringToFloat(outputWindow)); 
-		button[selectedButtonID]->Disable();
-		currentOperator = Division;
+		if (currentOperator == Equals) {
+			button[selectedButtonID]->Disable();
+			currentOperator = Division;
+		}
+		else {
+			numericInputs->push_back(processor.ConverStringToFloat(outputWindow));
+			button[selectedButtonID]->Disable();
+			currentOperator = Division;
+		}
 		break;
 	//Convert to Dec button
 	case 15:
-		writeTextForButtonSelected(selectedButtonID); 
+		converstionValue = processor.DecimalCoversion(outputWindow);
 		break;
 	//Convert to Bin button
-	case 16:
-		writeTextForButtonSelected(selectedButtonID); 
+	case 16:	
+		converstionValue = processor.DecimalCoversion(outputWindow);
+		processor.BinaryConversion(outputWindow, converstionValue);
 		break;
 	//Convert to Hex button
 	case 17:
-		conversionTookPlace = processor.HexConverstion(outputWindow);
+		converstionValue = processor.DecimalCoversion(outputWindow);
+		processor.HexConverstion(outputWindow, converstionValue);
 		break;
 	//Operation % button
 	case 18:
@@ -194,9 +221,15 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 			syntaxErrorOccurred = true;
 			break;
 		}
-		numaricInputs->push_back(processor.ConverStringToFloat(outputWindow)); 
-		button[selectedButtonID]->Disable();
-		currentOperator = Modulus;
+		if (currentOperator == Equals) {
+			button[selectedButtonID]->Disable();
+			currentOperator = Modulus;
+		}
+		else {
+			numericInputs->push_back(processor.ConverStringToFloat(outputWindow));
+			button[selectedButtonID]->Disable();
+			currentOperator = Modulus;
+		}
 		break;
 	//Operation * button
 	case 19:
@@ -211,18 +244,25 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 			syntaxErrorOccurred = true;
 			break;
 		}
-		numaricInputs->push_back(processor.ConverStringToFloat(outputWindow)); 
-		button[selectedButtonID]->Disable();
-		currentOperator = Multiplication;
-		break;
+		if (currentOperator == Equals) {
+			button[selectedButtonID]->Disable();
+			currentOperator = Multiplication;
+		}
+		else {
+			numericInputs->push_back(processor.ConverStringToFloat(outputWindow));
+			button[selectedButtonID]->Disable();
+			currentOperator = Multiplication;
+		}
 	default:
 		break;
 	}
 
-	if (numaricInputs->size() == 2 && previousOperator != Null) {
+	
+
+	if (numericInputs->size() == 2 && previousOperator != Null) {
 		
-		float input1 = numaricInputs->at(0);
-		float input2 = numaricInputs->at(1);
+		float input1 = numericInputs->at(0);
+		float input2 = numericInputs->at(1);
 
 
 		switch (previousOperator)
@@ -245,15 +285,27 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 		default:
 			break;
 		}
-		while (numaricInputs->size() != 0) {
-			numaricInputs->pop_back();
+		while (numericInputs->size() != 0) {
+			numericInputs->pop_back();
 		}
 
 		outputWindow->Clear();
 		outputWindow->AppendText(to_string(currentValue));
-		numaricInputs->push_back(currentValue);
+		numericInputs->push_back(currentValue);
 		previousOperator = Null;
+		
 	}
+
+	if (previousOperator == Equals && numaricInputRange) {
+		while (numericInputs->size() != 0) {
+			numericInputs->pop_back();
+		}
+		currentValue = processor.ConverStringToFloat(outputWindow);
+		numericInputs->push_back(currentValue);
+		currentOperator = Equals;
+		
+	}
+	
 
 	
 	
@@ -274,5 +326,5 @@ void MainWindow::SetOutputWindowToZero(wxTextCtrl* outputWindow) {
 
 
 
-MainWindow::~MainWindow() {delete numaricInputs; }
+MainWindow::~MainWindow() {delete numericInputs; }
 

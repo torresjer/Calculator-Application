@@ -1,4 +1,5 @@
 #include "Calculator_Processor.h"
+#include <bitset>
 
 Calculator_Processor& Calculator_Processor::GetInstance() {
 
@@ -47,15 +48,16 @@ void Calculator_Processor::ClearOperator(wxTextCtrl* outputWindow, vector<float>
 	}
 
 }
-bool Calculator_Processor::EqualsOperator(wxTextCtrl* outputWindow, vector<float>* numaricInputs, Calculator_Processor& processor) {
-	numaricInputs->push_back(processor.ConverStringToFloat(outputWindow));
+void Calculator_Processor::EqualsOperator(wxTextCtrl* outputWindow, vector<float>* numaricInputs, Calculator_Processor& processor, bool operationAnswered) {
+	float answer = processor.ConverStringToFloat(outputWindow);
+	numaricInputs->push_back(answer);
 	outputWindow->Clear();
-	return true;
+	operationAnswered = true;
+	return;
 }
-bool Calculator_Processor::HexConverstion(wxTextCtrl* outputWindow) {
+void Calculator_Processor::HexConverstion(wxTextCtrl* outputWindow, int converstionValue) {
 	vector<int> hexValues;
-	string input = outputWindow->GetValue().ToStdString();
-	int value = stoi(input);
+	int value = converstionValue;
 	while (value != 0) {
 		hexValues.push_back(value % 16);
 		value = value / 16;
@@ -63,7 +65,7 @@ bool Calculator_Processor::HexConverstion(wxTextCtrl* outputWindow) {
 
 	outputWindow->Clear();
 	outputWindow->AppendText("0x");
-		for (size_t i = 0; i < hexValues.size(); i++)
+	for (int i = hexValues.size() - 1; i >= 0; i--)
 		{
 			switch (hexValues[i]) {
 			case 0:
@@ -97,8 +99,52 @@ bool Calculator_Processor::HexConverstion(wxTextCtrl* outputWindow) {
 				outputWindow->AppendText("F");
 				break;
 			}
+	}
 
+}
+void Calculator_Processor::BinaryConversion(wxTextCtrl* outputWindow, int converstionValue) {
+	
+	int value = converstionValue;
+	outputWindow->Clear();
+
+	//Binary Conversion
+	outputWindow->AppendText(bitset<16>(value).to_string());
+}
+int Calculator_Processor::DecimalCoversion(wxTextCtrl* outputWindow) {
+	string input = outputWindow->GetValue().ToStdString();
+	int conversionValue = 0;
+
+	if (input[0] == '0' && input[1] == 'x') {
+		int base = 1;
+		for (int i = input.length(); i > 1; i--) {
+			if (input[i] >= '0' && input[i] <= '9') {
+				conversionValue += (int(input[i]) - 48) * base;
+
+				base = base * 16;
+			}
+			else if (input[i] >= 'A' && input[i] <= 'F') {
+				conversionValue += (int(input[i]) - 55) * base;
+				base = base * 16;
+			}
+		}
+		outputWindow->Clear();
+		outputWindow->AppendText(to_string(conversionValue));
+		return conversionValue;
+
+	}
+
+	if (input.length() == 16) {
+		int base = 1;
+		for (int i = input.length() - 1; i >= 0; i--) {
+			if (input[i] == '1')
+				conversionValue += base;
+			base = base * 2;
 		}
 
-		return true;
+		outputWindow->Clear();
+		outputWindow->AppendText(to_string(conversionValue));
+		return conversionValue;
+	}
+
+	return stoi(input);
 }

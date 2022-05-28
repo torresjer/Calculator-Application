@@ -24,8 +24,11 @@ public:
 	float DivisionOperator(float inputOne, float inputTwo);
 	float MultiplicationOperator(float inputOne, float inputTwo);
 	float ModulusOperator(int inputOne, int inputTwo);
-	void ClearOperator(wxTextCtrl* outputWindow, vector<float>* numaricInputs);
-	bool EqualsOperator(wxTextCtrl* outputWindow, vector<float>* numaricInputs, Calculator_Processor& processor);
-	bool HexConverstion(wxTextCtrl* outputWindow);
+	void ClearOperator(wxTextCtrl* outputWindow, vector<float>* numericInputs);
+	void EqualsOperator(wxTextCtrl* outputWindow, vector<float>* numericInputs, Calculator_Processor& processor, bool operationAnswered);
+	void HexConverstion(wxTextCtrl* outputWindow, int converstionValue);
+	void BinaryConversion(wxTextCtrl* outputWindow, int converstionValue);
+	int DecimalCoversion(wxTextCtrl* outputWindow);
+	
 };
 
