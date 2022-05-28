@@ -1,10 +1,15 @@
 #pragma once
 #include "../Calculator Application/Calculator_Processor.h"
 #include "wx/wx.h"
-class CalculatorProcessorTest
+#include <string>
+
+using namespace std;
+class CalculatorProcessorTestMethods
 {
 public:
-	
+	CalculatorProcessorTestMethods();
+
+	Calculator_Processor& test = Calculator_Processor::GetInstance();
 
 	void CalculatorProcessorTestAddition(float input1, float input2, float expectedResult);
 	void CalculatorProcessorTestSubtraction(float input1, float input2, float expectedResult);
@@ -13,6 +18,6 @@ public:
 	void CalculatorProcessorTestModulus(float input1, float input2, float expectedResult);
 	void CalculatorProcessorTestHexConversion(wxTextCtrl* input, int numberToConvert, string expectedResult);
 	void CalculatorProcessorTestBinConversion(wxTextCtrl* input, int numberToConvert, string expectedResult);
-	void CalculatorProcessorTestDecConversion(wxTextCtrl* input, int numberToConvert, int expextedResult);
+	void CalculatorProcessorTestDecConversion(wxTextCtrl* input, int expectedResult);
 };
 

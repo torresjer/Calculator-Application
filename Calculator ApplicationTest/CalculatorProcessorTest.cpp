@@ -1,28 +1,77 @@
 #include "CalculatorProcessorTest.h"
+CalculatorProcessorTestMethods::CalculatorProcessorTestMethods() {}
+void CalculatorProcessorTestMethods::CalculatorProcessorTestAddition(float input1, float input2, float expectedResult) {
 
-void CalculatorProcessorTest::CalculatorProcessorTestAddition(float input1, float input2, float expectedResult) {
-
-	if(processor)
+	if (testProcessor.AddtionOperator(input1, input2) == expectedResult) {
+		cout << "Passed";
+	}
+	else {
+		cout << "Failed";
+	}
 
 }
-void CalculatorProcessorTest::CalculatorProcessorTestSubtraction(float input1, float input2, float expectedResult) {
+void CalculatorProcessorTestMethods::CalculatorProcessorTestSubtraction(float input1, float input2, float expectedResult) {
+	if (testProcessor.SubtractionOperator(input1, input2) == expectedResult) {
+		cout << "Passed";
+	}
+	else {
+		cout << "Failed";
+	}
+};
+void CalculatorProcessorTestMethods::CalculatorProcessorTestDivision(float input1, float input2, float expectedResult) {
+	if (testProcessor.DivisionOperator(input1, input2) == expectedResult) {
+		cout << "Passed";
+	}
+	else {
+		cout << "Failed";
+	}
+};
+void CalculatorProcessorTestMethods::CalculatorProcessorTestMultiplication(float input1, float input2, float expectedResult) {
+	if (testProcessor.MultiplicationOperator(input1, input2) == expectedResult) {
+		cout << "Passed";
+	}
+	else {
+		cout << "Failed";
+	}
+};
+void CalculatorProcessorTestMethods::CalculatorProcessorTestModulus(float input1, float input2, float expectedResult) {
+	if (testProcessor.ModulusOperator(input1, input2) == expectedResult) {
+		cout << "Passed";
+	}
+	else {
+		cout << "Failed";
+	}
+};
+void CalculatorProcessorTestMethods::CalculatorProcessorTestHexConversion(wxTextCtrl* input, int numberToConvert, string expectedResult) {
+
+	testProcessor.HexConverstion(input, numberToConvert);
+
+	if (input->GetValue().ToStdString() == expectedResult) {
+		cout << "Passed";
+	}
+	else {
+		cout << "Failed";
+	}
+	
 
 };
-void CalculatorProcessorTest::CalculatorProcessorTestDivision(float input1, float input2, float expectedResult) {
+void CalculatorProcessorTestMethods::CalculatorProcessorTestBinConversion(wxTextCtrl* input, int numberToConvert, string expectedResult) {
+	testProcessor.BinaryConversion(input, numberToConvert);
 
+	if (input->GetValue().ToStdString() == expectedResult) {
+		cout << "Passed";
+	}
+	else {
+		cout << "Failed";
+	}
 };
-void CalculatorProcessorTest::CalculatorProcessorTestMultiplication(float input1, float input2, float expectedResult) {
+void CalculatorProcessorTestMethods::CalculatorProcessorTestDecConversion(wxTextCtrl* input, int expectedResult) {
+	
 
-};
-void CalculatorProcessorTest::CalculatorProcessorTestModulus(float input1, float input2, float expectedResult) {
-
-};
-void CalculatorProcessorTest::CalculatorProcessorTestHexConversion(wxTextCtrl* input, int numberToConvert, string expectedResult) {
-
-};
-void CalculatorProcessorTest::CalculatorProcessorTestBinConversion(wxTextCtrl* input, int numberToConvert, string expectedResult) {
-
-};
-void CalculatorProcessorTest::CalculatorProcessorTestDecConversion(wxTextCtrl* input, int numberToConvert, int expextedResult) {
-
+	if (testProcessor.DecimalCoversion(input) == expectedResult) {
+		cout << "Passed";
+	}
+	else {
+		cout << "Failed";
+	}
 };

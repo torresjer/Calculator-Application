@@ -3,9 +3,12 @@
 #include "CalculatorProcessorTest.h"
 #include <iostream>
 
+using namespace std;
 int main()
 {
-    
+    CalculatorProcessorTestMethods* testProcessor;
+    cout << "Test 1 Addition: ";
+    testProcessor.CalculatorProcessorTestAddition(5, 145, 150);
     
 }
 
