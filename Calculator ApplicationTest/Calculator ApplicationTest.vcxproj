@@ -148,8 +148,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Calculator ApplicationTest.cpp" />
+    <ClCompile Include="CalculatorProcessorTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CalculatorProcessorTest.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
