@@ -196,15 +196,36 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 		break;
 	//Convert to Dec button
 	case 15:
+		if (outputWindow->IsEmpty()) {
+
+			outputWindow->Clear();
+			outputWindow->AppendText("SYNTAX ERROR");
+			syntaxErrorOccurred = true;
+			return;
+		}
 		converstionValue = processor.DecimalCoversion(outputWindow);
 		break;
 	//Convert to Bin button
 	case 16:	
+		if (outputWindow->IsEmpty()) {
+
+			outputWindow->Clear();
+			outputWindow->AppendText("SYNTAX ERROR");
+			syntaxErrorOccurred = true;
+			return;
+		}
 		converstionValue = processor.DecimalCoversion(outputWindow);
 		processor.BinaryConversion(outputWindow, converstionValue);
 		break;
 	//Convert to Hex button
 	case 17:
+		if (outputWindow->IsEmpty()) {
+
+			outputWindow->Clear();
+			outputWindow->AppendText("SYNTAX ERROR");
+			syntaxErrorOccurred = true;
+			return;
+		}
 		converstionValue = processor.DecimalCoversion(outputWindow);
 		processor.HexConverstion(outputWindow, converstionValue);
 		break;
@@ -306,9 +327,6 @@ void MainWindow::ButtonSelected(wxCommandEvent &event){
 		
 	}
 	
-
-	
-	
 }
 
 //Writes text to output windown depending on selected button.
@@ -317,14 +335,6 @@ void MainWindow::writeTextForButtonSelected(int buttonID) {
 	outputWindow->AppendText(operationLabels[buttonID]);
 
 }
-void MainWindow::SetOutputWindowToZero(wxTextCtrl* outputWindow) {
-
-	outputWindow->Clear();
-	outputWindow->AppendText("0");
-}
-
-
-
 
 MainWindow::~MainWindow() {delete numericInputs; }
 
